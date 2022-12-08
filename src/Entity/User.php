@@ -12,6 +12,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -58,6 +60,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
+
+    #[ORM\ManyToMany(targetEntity: Task::class, mappedBy: 'users')]
+    private Collection $tasks;
+
+    #[ORM\OneToMany(mappedBy: 'workBy', targetEntity: WorkTime::class)]
+    private Collection $workTimes;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+        $this->workTimes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -173,5 +187,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // add $this->salt too if you don't use Bcrypt or Argon2i
         [$this->id, $this->username, $this->password] = $data;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            $task->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkTime>
+     */
+    public function getWorkTimes(): Collection
+    {
+        return $this->workTimes;
+    }
+
+    public function addWorkTime(WorkTime $workTime): self
+    {
+        if (!$this->workTimes->contains($workTime)) {
+            $this->workTimes->add($workTime);
+            $workTime->setWorkBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkTime(WorkTime $workTime): self
+    {
+        if ($this->workTimes->removeElement($workTime)) {
+            // set the owning side to null (unless already changed)
+            if ($workTime->getWorkBy() === $this) {
+                $workTime->setWorkBy(null);
+            }
+        }
+
+        return $this;
     }
 }
