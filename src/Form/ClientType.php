@@ -14,7 +14,6 @@ class ClientType extends AbstractType
         $builder
             ->add('name')
             ->add('fullName')
-            ->add('projects')
         ;
     }
 
