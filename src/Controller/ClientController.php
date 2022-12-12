@@ -37,7 +37,7 @@ class ClientController extends AbstractController
             $entityManager->persist($client);
             $entityManager->flush();
 
-            return $this->redirectToRoute('task_success');
+            return $this->redirectToRoute('app_client');
         }
 
         return $this->render('client/new.html.twig', [
@@ -57,7 +57,7 @@ class ClientController extends AbstractController
             $entityManager->persist($client);
             $entityManager->flush();
 
-            return $this->redirectToRoute('task_success');
+            return $this->redirectToRoute('app_client');
         }
         // for now, reusing the same template as for 'new'
         return $this->render('client/new.html.twig', [
