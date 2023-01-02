@@ -14,7 +14,7 @@ class WorkTime
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateInterval $time = null;
+    private ?float $time = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $message = null;
@@ -33,12 +33,12 @@ class WorkTime
         return $this->id;
     }
 
-    public function getTime(): ?\DateInterval
+    public function getTime(): ?float
     {
         return $this->time;
     }
 
-    public function setTime(\DateInterval $time): self
+    public function setTime(float $time): self
     {
         $this->time = $time;
 
