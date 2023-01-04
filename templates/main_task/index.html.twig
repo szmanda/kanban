@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>{{ title }}</h1>
+
+    <a href="{{ path('app_main_task_new') }}">
+        <button class="btn btn-primary">New {{ title }}</button>
+    </a>
+
+    <table class="table">
+        <tr>
+            <th>Id</th>
+            <th>Position</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Board</th>
+            <th>Project</th>
+        </tr>
+    {% for main_task in main_tasks %}
+        <tr>
+            <td>{{ main_task.id }}</td>
+            <td>{{ main_task.position }}</td>
+            <td>{{ main_task.task.title }}</td>
+            <td>{{ main_task.status.name }}</td>
+            <td>{{ main_task.status.board.name }}</td>
+            <td>{{ main_task.status.board.project.name }}</td>
+            <td>
+                <a href="{{ path('app_main_task_edit', {id : main_task.id} ) }}">
+                    <button class="btn btn-secondary"><span class="fa fa-pen"></span></button>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}

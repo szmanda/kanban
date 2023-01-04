@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>{{ title }}</h1>
+
+    <a href="{{ path('app_status_new') }}">
+        <button class="btn btn-primary">New {{ title }}</button>
+    </a>
+
+    <table class="table">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Board</th>
+            <th>Project</th>
+        </tr>
+    {% for status in statuses %}
+        <tr>
+            <td>{{ status.id }}</td>
+            <td>{{ status.name }}</td>
+            <td>{{ status.position }}</td>
+            <td>{{ status.board }}</td>
+            <td>{{ status.board.project }}</td>
+            <td>
+                <a href="{{ path('app_status_edit', {id : status.id} ) }}">
+                    <button class="btn btn-secondary"><span class="fa fa-pen"></span></button>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}

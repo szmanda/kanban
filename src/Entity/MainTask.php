@@ -25,7 +25,7 @@ class MainTask
     #[ORM\JoinColumn(nullable: false)]
     private ?Status $status = null;
 
-    #[ORM\OneToMany(mappedBy: 'MainTask', targetEntity: SubTask::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'mainTask', targetEntity: SubTask::class, orphanRemoval: true)]
     private Collection $subTasks;
 
     #[ORM\OneToMany(mappedBy: 'mainTask', targetEntity: Event::class, orphanRemoval: true)]

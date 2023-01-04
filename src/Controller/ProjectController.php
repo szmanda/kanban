@@ -11,9 +11,10 @@ use App\Repository\ProjectRepository;
 use App\Entity\Project;
 use App\Form\ProjectType;
 
+#[Route('/project')]
 class ProjectController extends AbstractController
 {
-    #[Route('/project', name: 'app_project')]
+    #[Route('/', name: 'app_project')]
     public function index(ProjectRepository $rep): Response
     {
         $projects = $rep->findAll();
