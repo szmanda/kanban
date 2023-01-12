@@ -24,6 +24,16 @@ class BoardController extends AbstractController
         ]);
     }
 
+    /// Board view including statuses and tasks 
+    #[Route('/view/{id}', name: 'app_board_view')]
+    public function view(BoardRepository $rep, Board $board): Response
+    {
+        return $this->render('board/view.html.twig', [
+            'title' => 'Boards',
+            'board' => $board,
+        ]);
+    }
+
     #[Route('/new', name: 'app_board_new')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

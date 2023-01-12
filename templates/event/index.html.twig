@@ -11,29 +11,28 @@
 <div class="example-wrapper">
     <h1>{{ title }}</h1>
 
-    <a href="{{ path('app_board_new') }}">
+    <a href="{{ path('app_event_new') }}">
         <button class="btn btn-primary">New {{ title }}</button>
     </a>
 
     <table class="table">
         <tr>
             <th>Id</th>
-            <th>Name</th>
-            <th>Project</th>
+            <th>Title</th>
+            <th>MainTask</th>
+            <th>Start</th>
+            <th>Duration</th>
         </tr>
-    {% for board in boards %}
+    {% for event in events %}
         <tr>
-            <td>{{ board.id }}</td>
-            <td>{{ board.name }}</td>
-            <td>{{ board.project }}</td>
+            <td>{{ event.id }}</td>
+            <td>{{ event.task.title }}</td>
+            <td>{{ event.mainTask.task.title }}</td>
+            <td>{{ event.start|date("d-m-Y h:i") }}</td>
+            <td>{{ event.duration }} hours</td>
             <td>
-                <a href="{{ path('app_board_edit', {id : board.id} ) }}">
+                <a href="{{ path('app_event_edit', {id : event.id} ) }}">
                     <button class="btn btn-secondary"><span class="fa fa-pen"></span></button>
-                </a>
-            </td>
-            <td>
-                <a href="{{ path('app_board_view', {id : board.id} ) }}">
-                    <button class="btn btn-secondary"><span class="fa fa-eye"></span></button>
                 </a>
             </td>
         </tr>

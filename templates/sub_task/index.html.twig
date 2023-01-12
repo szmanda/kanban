@@ -11,29 +11,26 @@
 <div class="example-wrapper">
     <h1>{{ title }}</h1>
 
-    <a href="{{ path('app_board_new') }}">
+    <a href="{{ path('app_sub_task_new') }}">
         <button class="btn btn-primary">New {{ title }}</button>
     </a>
 
     <table class="table">
         <tr>
             <th>Id</th>
-            <th>Name</th>
-            <th>Project</th>
+            <th>Title</th>
+            <th>MainTask</th>
+            <th>Position</th>
         </tr>
-    {% for board in boards %}
+    {% for sub_task in sub_tasks %}
         <tr>
-            <td>{{ board.id }}</td>
-            <td>{{ board.name }}</td>
-            <td>{{ board.project }}</td>
+            <td>{{ sub_task.id }}</td>
+            <td>{{ sub_task.task.title }}</td>
+            <td>{{ sub_task.mainTask.task.title }}</td>
+            <td>{{ sub_task.position }}</td>
             <td>
-                <a href="{{ path('app_board_edit', {id : board.id} ) }}">
+                <a href="{{ path('app_sub_task_edit', {id : sub_task.id} ) }}">
                     <button class="btn btn-secondary"><span class="fa fa-pen"></span></button>
-                </a>
-            </td>
-            <td>
-                <a href="{{ path('app_board_view', {id : board.id} ) }}">
-                    <button class="btn btn-secondary"><span class="fa fa-eye"></span></button>
                 </a>
             </td>
         </tr>

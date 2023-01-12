@@ -24,10 +24,12 @@ class StatusController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_status_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    /// accepts *optional parameter board
+    #[Route('/new/{board}', name: 'app_status_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager, Board $board = null): Response
     {
         $status = new Status();
+        $status->setBoard($board);
 
         $form = $this->createForm(StatusType::class, $status);
         $form->handleRequest($request);
@@ -37,6 +39,7 @@ class StatusController extends AbstractController
             $entityManager->persist($status);
             $entityManager->flush();
 
+            if ($status->getBoard() != null) return $this->redirectToRoute('app_board_view', array( "id" => $status->getBoard()->getId() ));
             return $this->redirectToRoute('app_status');
         }
 
@@ -64,5 +67,14 @@ class StatusController extends AbstractController
             'title' => 'New Status',
             'form' => $form,
         ]);
+    }
+
+    #[Route('/delete/{id}', name: 'app_status_delete')]
+    public function delete(Request $request, EntityManagerInterface $entityManager, Status $status): Response
+    {
+        $boardId = $status->getBoard()->getId();
+        $entityManager->remove($status);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_board_view', array("id" => $boardId));
     }
 }

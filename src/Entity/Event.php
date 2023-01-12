@@ -18,7 +18,7 @@ class Event
     private ?\DateTimeInterface $start = null;
 
     #[ORM\Column]
-    private ?\DateInterval $duration = null;
+    private ?float $duration = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
@@ -44,12 +44,12 @@ class Event
         return $this;
     }
 
-    public function getDuration(): ?\DateInterval
+    public function getDuration(): ?float
     {
         return $this->duration;
     }
 
-    public function setDuration(\DateInterval $duration): self
+    public function setDuration(float $duration): self
     {
         $this->duration = $duration;
 

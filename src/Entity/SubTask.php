@@ -42,12 +42,12 @@ class SubTask
 
     public function getMainTask(): ?MainTask
     {
-        return $this->MainTask;
+        return $this->mainTask;
     }
 
-    public function setMainTask(?MainTask $MainTask): self
+    public function setMainTask(?MainTask $mainTask): self
     {
-        $this->MainTask = $MainTask;
+        $this->mainTask = $mainTask;
 
         return $this;
     }

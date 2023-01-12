@@ -162,4 +162,8 @@ class MainTask
 
         return $this;
     }
+    public function __toString()
+    {
+        return $this->task->getTitle();
+    }
 }
