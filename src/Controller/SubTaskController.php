@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SubTaskRepository;
+use App\Repository\MainTaskRepository;
 use App\Entity\SubTask;
 use App\Form\SubTaskType;
 use App\Entity\Task;
@@ -25,10 +26,12 @@ class SubTaskController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_sub_task_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{mainTaskId}', name: 'app_sub_task_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager, MainTaskRepository $repMainTask, int $mainTaskId = null): Response
     {
         $subTask = new SubTask();
+        $mainTask = $repMainTask->findOneById($mainTaskId);
+        $subTask->setMainTask($mainTask);
 
         $form = $this->createForm(SubTaskType::class, $subTask);
         $form->handleRequest($request);
@@ -44,7 +47,7 @@ class SubTaskController extends AbstractController
             $entityManager->persist($subTask);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_sub_task');
+            return $this->redirectToRoute('app_main_task_view', array( 'id' => $subTask->getMainTask()->getId() ));
         }
 
         return $this->render('sub_task/new.html.twig', [
@@ -70,7 +73,7 @@ class SubTaskController extends AbstractController
             $entityManager->persist($subTask);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_sub_task');
+            return $this->redirectToRoute('app_main_task_view', array( 'id' => $subTask->getMainTask()->getId() ));
         }
 
         return $this->render('sub_task/new.html.twig', [

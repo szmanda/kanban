@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>{{ title }}</h1>
+
+    <a href="{{ path('app_work_time_new') }}">
+        <button class="btn btn-primary">New {{ title }}</button>
+    </a>
+
+    <table class="table">
+        <tr>
+            <th>Id</th>
+            <th>Time</th>
+            <th>Message</th>
+            <th>Registered at</th>
+            <th>Work by</th>
+            <th>Task</th>
+        </tr>
+    {% for work_time in work_times %}
+        <tr>
+            <td>{{ work_time.id }}</td>
+            <td>{{ work_time.time }} hours</td>
+            <td>{{ work_time.message }}</td>
+            <td>{{ work_time.registeredAt|date('d-m-Y') }}</td>
+            <td>{{ work_time.workBy }}</td>
+            <td>{{ work_time.task.title }}</td>
+            <td>
+                <a href="{{ path('app_work_time_edit', {id : work_time.id} ) }}">
+                    <button class="btn btn-secondary"><span class="fa fa-pen"></span></button>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}

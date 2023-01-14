@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\StatusRepository;
 use App\Entity\Status;
 use App\Form\StatusType;
+use App\Repository\BoardRepository;
 
 #[Route('/status')]
 class StatusController extends AbstractController
@@ -25,10 +26,11 @@ class StatusController extends AbstractController
     }
 
     /// accepts *optional parameter board
-    #[Route('/new/{board}', name: 'app_status_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager, Board $board = null): Response
+    #[Route('/new/{boardId}', name: 'app_status_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager, BoardRepository $repBoard, int $boardId = null): Response
     {
         $status = new Status();
+        $board = $repBoard->findOneById($boardId);
         $status->setBoard($board);
 
         $form = $this->createForm(StatusType::class, $status);

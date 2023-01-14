@@ -110,6 +110,14 @@ class Task
         return $this;
     }
 
+    public function findMainTask(): ?MainTask
+    {
+        if ($this->mainTask != null) return $this->mainTask;
+        if ($this->subTask != null) return $this->subTask->getMainTask();
+        if ($this->event != null) return $this->event->getMainTask();
+        return null;
+    }
+
     public function getMainTask(): ?MainTask
     {
         return $this->mainTask;

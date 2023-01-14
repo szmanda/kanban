@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\MainTaskRepository;
+use App\Repository\StatusRepository;
+use App\Repository\TaskRepository;
 use App\Entity\MainTask;
 use App\Form\MainTaskType;
 use App\Entity\Task;
@@ -25,10 +27,25 @@ class MainTaskController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_main_task_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    /// MainTask view including subtasks 
+    #[Route('/view/{id}', name: 'app_main_task_view')]
+    public function view(TaskRepository $repTask, MainTask $mainTask): Response
+    {
+        $totalTime = $repTask->taskTotalTime($mainTask->getTask()->getId());
+        dump($totalTime);
+        return $this->render('main_task/view.html.twig', [
+            'title' => 'Boards',
+            'main_task' => $mainTask,
+            'total_time' => $totalTime,
+        ]);
+    }
+
+    #[Route('/new/{statusId}', name: 'app_main_task_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager, StatusRepository $repStatus, int $statusId = null): Response
     {
         $mainTask = new MainTask();
+        $status = $repStatus->findOneById($statusId);
+        $mainTask->setStatus($status);
 
         $form = $this->createForm(MainTaskType::class, $mainTask);
         $form->handleRequest($request);
@@ -44,7 +61,7 @@ class MainTaskController extends AbstractController
             $entityManager->persist($mainTask);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_main_task');
+            return $this->redirectToRoute('app_board_view', array('id' => $mainTask->getStatus()->getBoard()->getId()));
         }
 
         return $this->render('main_task/new.html.twig', [
@@ -70,7 +87,7 @@ class MainTaskController extends AbstractController
             $entityManager->persist($mainTask);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_main_task');
+            return $this->redirectToRoute('app_board_view', array('id' => $mainTask->getStatus()->getBoard()->getId()));
         }
 
         return $this->render('main_task/new.html.twig', [

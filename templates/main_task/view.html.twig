@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="wrapper">
+    <h1>{{ main_task.task.title }}</h1>
+    <h5>{{ main_task.status.board.project.name }}/{{ main_task.status.board.name }}/{{ main_task.task.title }}</h5>
+
+    <a href="{{ path('app_board_view', { id : main_task.status.board.id }) }}">
+        <i class="fa fa-arrow-left"></i>Back to board
+    </a><br>
+    <a href="{{ path('app_work_time_new', { taskId : main_task.task.id }) }}">
+        <i class="fa fa-clock"></i>Register time
+    </a>
+
+    <p>Total time spent on this task: {{ total_time }} hours</p>
+
+    <h3>Subtasks</h3>
+    <table class="table">
+    {% for subTask in main_task.subTasks %}
+        <tr style="border-top: 1px solid;">
+            <td style="font-size: 2em;">{{ subTask.task.title }}</td>
+            <td><a href="{{ path('app_sub_task_edit', { id : subTask.id }) }}"><button class="btn">
+                <i class="fa fa-pen"></i>Edit
+            </button></a></td>
+            <td><a href="{{ path('app_work_time_new', { taskId : subTask.task.id }) }}"><button class="btn">
+                <i class="fa fa-clock"></i>Register time
+            </button></a></td>
+        </tr>
+    {% endfor %}
+    </table>
+    <a href="{{ path('app_sub_task_new', { mainTaskId : main_task.id }) }}">
+        <button class="btn">
+            <i class="fa fa-plus"></i>New subtask
+        </button>
+    </a>
+
+    <p>MainTask.id: {{ main_task.id }}, Task.id {{ main_task.task.id }}</p>
+
+</div>
+{% endblock %}

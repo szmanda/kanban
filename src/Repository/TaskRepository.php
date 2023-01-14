@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * @extends ServiceEntityRepository<Task>
@@ -37,6 +38,17 @@ class TaskRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function taskTotalTime(int $id)
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('task_total_time', 'time');
+        $result = $this->getEntityManager()
+            ->createNativeQuery("SELECT TASK_TOTAL_TIME(?)", $rsm)
+            ->setParameter(1, $id)
+            ->getOneOrNullResult();
+        return $result['time'] ?? 0;
     }
 
 //    /**

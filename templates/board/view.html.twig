@@ -12,7 +12,7 @@
     <h1>{{ board.name }} Board</h1>
     <h5>Project: {{ board.project.name }}</h5>
 
-    <a href="{{ path('app_status_new', {id : board.id}) }}">
+    <a href="{{ path('app_status_new', { boardId : board.id }) }}">
         <button class="btn btn-outline-primary">
             <i class="fa fa-plus"></i>New Status
         </button>
@@ -29,10 +29,12 @@
                 </h3>
                 <ul class="list-group">
                 {% for mainTask in status.mainTasks %}
-                    <li class="list-group-item">{{ mainTask.task.title }}</li>
+                    <a href="{{ path('app_main_task_view', { id : mainTask.id }) }}">
+                        <li class="list-group-item">{{ mainTask.task.title }}</li>
+                    </a>
                 {% endfor %}
                     <li class="list-group-item">
-                        <a class="btn btn-secondary" href="{{ path('app_main_task_new') }}">
+                        <a class="btn btn-secondary" href="{{ path('app_main_task_new', { statusId: status.id }) }}">
                             <i class="fa fa-plus"></i>New Task
                         </a>
                     </li>
