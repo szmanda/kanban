@@ -93,3 +93,67 @@ bin/console make # a number of commands usefull to interactively create classes
 ```
 
 
+### Creating stored functions and procedures with Postgres for this project
+
+Connecting to database via console:
+```shell
+sudo -u postgres psql
+```
+[psql command line tutorial and cheat sheet | postgres (tomcam.github.io)](https://tomcam.github.io/postgres/)
+```shell
+\l # list available databases
+\c database # connecto to database
+\dt # display tables
+\d table# display columns of a table
+```
+
+```sql
+-- Procedure increments the priority of tasks with given status
+CREATE OR REPLACE PROCEDURE
+  MAIN_TASK_PRIORITIZE (vStatusId INTEGER)
+AS $$
+BEGIN
+  UPDATE main_task
+  SET priority = priority + 1
+  WHERE status_id = vStatusId;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+call a procedure with: `CALL MAIN_TASK_PRIORITIZE(<parameter>)`
+
+```sql
+-- Function calculates total worktime spent on a given task.
+CREATE OR REPLACE FUNCTION
+  TASK_TOTAL_TIME (vTaskId INTEGER)
+RETURNS real AS $$
+DECLARE
+  vTask task%ROWTYPE;
+BEGIN
+  SELECT * INTO vTask
+    FROM task
+    WHERE id = vTaskId;
+  IF vTask.main_task_id IS NOT NULL THEN
+    RETURN SUM(COALESCE(wt.time, 0)) FROM work_time wt
+      WHERE wt.task_id IN (
+        SELECT vTaskId as id
+          UNION
+        SELECT t.id as id FROM task t
+        JOIN sub_task s ON t.sub_task_id = s.id
+        WHERE s.main_task_id = vTask.main_task_id
+          UNION
+        SELECT t.id as id FROM task t
+        JOIN event e ON t.event_id = e.id
+        WHERE e.main_task_id = vTask.main_task_id
+      );
+  ELSEIF COALESCE(vTask.sub_task_id, vTask.event_id) IS NOT NULL THEN
+    RETURN COALESCE(SUM(COALESCE(wt.time, 0)), 0) FROM work_time wt
+      WHERE wt.task_id = vTaskId;
+  ELSE
+    RETURN NULL;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+call a function with: `SELECT TASK_TOTAL_TIME(<parameter>)`

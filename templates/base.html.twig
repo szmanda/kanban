@@ -33,7 +33,7 @@
                     <div class="container">
                         <div class="navbar-header col-md-3 col-lg-2">
                             <a class="navbar-brand" href="{{ path('homepage') }}">
-                                Symfony Demo
+                                Kanban Clone
                             </a>
 
                             <button type="button" class="navbar-toggle"
@@ -52,6 +52,11 @@
                                     <li>
                                         <a href="{{ path('blog_index') }}">
                                             <i class="fa fa-home" aria-hidden="true"></i> {{ 'menu.homepage'|trans }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('app_board') }}">
+                                            <i class="fa fa-list" aria-hidden="true"></i> Boards
                                         </a>
                                     </li>
 
