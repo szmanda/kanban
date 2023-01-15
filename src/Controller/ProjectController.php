@@ -24,6 +24,16 @@ class ProjectController extends AbstractController
         ]);
     }
 
+    /// MainTask view including subtasks 
+    #[Route('/view/{id}', name: 'app_project_view')]
+    public function view(ProjectRepository $rep, Project $project): Response
+    {
+        return $this->render('project/view.html.twig', [
+            'title' => 'Project',
+            'project' => $project,
+        ]);
+    }
+
     #[Route('/new', name: 'app_project_new')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

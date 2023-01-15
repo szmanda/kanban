@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Status;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * @extends ServiceEntityRepository<Status>
@@ -37,6 +38,14 @@ class StatusRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function statusPrioritize(int $id)
+    {
+        return $this->getEntityManager()
+            ->createNativeQuery("CALL STATUS_PRIORITIZE(?)", new ResultSetMapping())
+            ->setParameter(1, $id)
+            ->getResult();
     }
 
 //    /**

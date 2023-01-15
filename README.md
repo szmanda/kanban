@@ -110,17 +110,17 @@ sudo -u postgres psql
 ```sql
 -- Procedure increments the priority of tasks with given status
 CREATE OR REPLACE PROCEDURE
-  MAIN_TASK_PRIORITIZE (vStatusId INTEGER)
+  STATUS_PRIORITIZE (vStatusId INTEGER)
 AS $$
 BEGIN
   UPDATE main_task
-  SET priority = priority + 1
+  SET priority = priority - 1
   WHERE status_id = vStatusId;
 END;
 $$ LANGUAGE plpgsql;
 ```
 
-call a procedure with: `CALL MAIN_TASK_PRIORITIZE(<parameter>)`
+call a procedure with: `CALL STATUS_PRIORITIZE(<parameter>)`
 
 ```sql
 -- Function calculates total worktime spent on a given task.

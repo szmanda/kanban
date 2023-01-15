@@ -35,6 +35,11 @@
                     <button class="btn btn-secondary"><span class="fa fa-pen"></span></button>
                 </a>
             </td>
+            <td>
+                <a href="{{ path('app_project_view', {id : project.id} ) }}">
+                    <button class="btn btn-secondary"><span class="fa fa-eye"></span></button>
+                </a>
+            </td>
         </tr>
     {% endfor %}
     </table>

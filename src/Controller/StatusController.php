@@ -79,4 +79,11 @@ class StatusController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('app_board_view', array("id" => $boardId));
     }
+
+    #[Route('/prioritize/{id}', name: 'app_status_prioritize')]
+    public function prioritize(StatusRepository $rep, Status $status): Response
+    {
+        $rep->statusPrioritize($status->getId());
+        return $this->redirectToRoute('app_board_view', array("id" => $status->getBoard()->getId()));
+    }
 }

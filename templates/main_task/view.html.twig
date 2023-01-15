@@ -18,20 +18,38 @@
     <a href="{{ path('app_work_time_new', { taskId : main_task.task.id }) }}">
         <i class="fa fa-clock"></i>Register time
     </a>
+    <p></p>
 
-    <p>Total time spent on this task: {{ total_time }} hours</p>
+    <p>Assigned users:
+    {% for user in main_task.task.users %}
+        <span class="badge" style="font-size: 1em; background-color: #267;">{{ user.fullName }}</span>
+    {% endfor %}
+    <a href="{{ path('app_task_assign', { id : main_task.task.id }) }}">
+        <i class="fa fa-plus"></i>Assign Users
+    </a>
+    <br>
+    Total time spent on this task: {{ total_time }} hours</p>
 
     <h3>Subtasks</h3>
     <table class="table">
     {% for subTask in main_task.subTasks %}
         <tr style="border-top: 1px solid;">
-            <td style="font-size: 2em;">{{ subTask.task.title }}</td>
-            <td><a href="{{ path('app_sub_task_edit', { id : subTask.id }) }}"><button class="btn">
-                <i class="fa fa-pen"></i>Edit
-            </button></a></td>
-            <td><a href="{{ path('app_work_time_new', { taskId : subTask.task.id }) }}"><button class="btn">
-                <i class="fa fa-clock"></i>Register time
-            </button></a></td>
+            <td style="font-size: 1.2em;">{{ subTask.task.title }}</td>
+            <td>
+            {% for user in subTask.task.users %}
+                <span class="badge" style="font-size: 1em; background-color: #267;">{{ user.fullName }}</span>
+            {% endfor %}
+            </td>
+            <td>
+                <a href="{{ path('app_task_assign', { id : subTask.task.id }) }}"><button class="btn">
+                    <i class="fa fa-plus"></i>Assign Users
+                </button></a>
+                <a href="{{ path('app_sub_task_edit', { id : subTask.id }) }}"><button class="btn">
+                    <i class="fa fa-pen"></i>Edit
+                </button></a>
+                <a href="{{ path('app_work_time_new', { taskId : subTask.task.id }) }}"><button class="btn">
+                    <i class="fa fa-clock"></i>Register time
+                </button></a></td>
         </tr>
     {% endfor %}
     </table>

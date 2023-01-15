@@ -10,7 +10,7 @@
 
 <div class="wrapper">
     <h1>{{ board.name }} Board</h1>
-    <h5>Project: {{ board.project.name }}</h5>
+    <h5>Project: <a href="{{ path('app_project_view', { id : board.project.id }) }}">{{ board.project.name }}</h5>
 
     <a href="{{ path('app_status_new', { boardId : board.id }) }}">
         <button class="btn btn-outline-primary">
@@ -23,14 +23,23 @@
             <div class="card col-md-3 position-relative">
                 <h3>
                     {{ status.name }}
+                    <a href="{{ path('app_status_edit', {id: status.id}) }}">
+                        <i class="fa fa-pen" style="font-size: 0.5em;"></i>
+                    </a>
                     <a href="{{ path('app_status_delete', {id: status.id}) }}">
                         <i class="fa fa-trash text-danger" style="font-size: 0.5em;"></i>
                     </a>
                 </h3>
+                <a class="text-warning" href="{{ path('app_status_prioritize', {id: status.id}) }}">
+                    <i class="fa fa-exclamation"></i>Prioritize
+                </a>
                 <ul class="list-group">
                 {% for mainTask in status.mainTasks %}
                     <a href="{{ path('app_main_task_view', { id : mainTask.id }) }}">
-                        <li class="list-group-item">{{ mainTask.task.title }}</li>
+                        <li class="list-group-item">
+                            {{ mainTask.task.title }}
+                            <span class="badge bg-info">P{{ mainTask.priority }}</span>
+                        </li>
                     </a>
                 {% endfor %}
                     <li class="list-group-item">
