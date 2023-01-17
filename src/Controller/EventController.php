@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\EventRepository;
+use App\Repository\MainTaskRepository;
 use App\Entity\Event;
 use App\Form\EventType;
 use App\Entity\MainTask;
@@ -26,10 +27,12 @@ class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_event_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{mainTaskId}', name: 'app_event_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager, MainTaskRepository $repMainTask, int $mainTaskId = null): Response
     {
         $event = new Event();
+        $mainTask = $repMainTask->findOneById($mainTaskId);
+        $event->setMainTask($mainTask);
 
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
@@ -45,7 +48,7 @@ class EventController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event');
+            return $this->redirectToRoute('app_main_task_view', array( 'id' => $event->getMainTask()->getId() ));
         }
 
         return $this->render('event/new.html.twig', [
@@ -71,12 +74,21 @@ class EventController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event');
+            return $this->redirectToRoute('app_main_task_view', array( 'id' => $event->getMainTask()->getId() ));
         }
 
         return $this->render('event/new.html.twig', [
             'title' => 'Edit Main Task',
             'form' => $form,
         ]);
+    }
+    
+    #[Route('/delete/{id}', name: 'app_event_delete')]
+    public function delete(Request $request, EntityManagerInterface $entityManager, Event $event): Response
+    {
+        $mainTaskId = $event->getMainTask()->getId();
+        $entityManager->remove($event);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_main_task_view', array("id" => $mainTaskId));
     }
 }

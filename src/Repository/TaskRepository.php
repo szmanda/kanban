@@ -6,6 +6,8 @@ use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\ResultSetMapping;
+use App\Pagination\Paginator;
+use function Symfony\Component\String\u;
 
 /**
  * @extends ServiceEntityRepository<Task>
@@ -49,6 +51,52 @@ class TaskRepository extends ServiceEntityRepository
             ->setParameter(1, $id)
             ->getOneOrNullResult();
         return $result['time'] ?? 0;
+    }
+
+    /**
+     * @return Task[]
+     */
+    public function findBySearchQuery(string $query, int $limit = Paginator::PAGE_SIZE): array
+    {
+        $searchTerms = $this->extractSearchTerms($query);
+
+        if (0 === \count($searchTerms)) {
+            return [];
+        }
+
+        $queryBuilder = $this->createQueryBuilder('t');
+
+        foreach ($searchTerms as $key => $term) {
+            $queryBuilder
+                ->orWhere('t.title LIKE :t_'.$key)
+                ->setParameter('t_'.$key, '%'.$term.'%')
+            ;
+        }
+
+        /** @var Task[] $result */
+        $result = $queryBuilder
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $result;
+    }
+
+    /**
+     * Transforms the search string into an array of search terms.
+     *
+     * @return string[]
+     */
+    private function extractSearchTerms(string $searchQuery): array
+    {
+        $searchQuery = u($searchQuery)->replaceMatches('/[[:space:]]+/', ' ')->trim();
+        $terms = array_unique($searchQuery->split(' '));
+
+        // ignore the search terms that are too short
+        return array_filter($terms, static function ($term) {
+            return 2 <= $term->length();
+        });
     }
 
 //    /**

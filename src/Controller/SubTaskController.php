@@ -81,4 +81,13 @@ class SubTaskController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/delete/{id}', name: 'app_sub_task_delete')]
+    public function delete(Request $request, EntityManagerInterface $entityManager, SubTask $subTask): Response
+    {
+        $mainTaskId = $subTask->getMainTask()->getId();
+        $entityManager->remove($subTask);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_main_task_view', array("id" => $mainTaskId));
+    }
 }

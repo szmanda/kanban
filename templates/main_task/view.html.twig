@@ -9,8 +9,18 @@
 </style>
 
 <div class="wrapper">
-    <h1>{{ main_task.task.title }}</h1>
+    <h1>
+        {{ main_task.task.title }}
+        <a href="{{ path('app_main_task_edit', {id: main_task.id}) }}">
+            <i class="fa fa-pen" style="font-size: 0.5em;"></i>
+        </a>
+        <a href="{{ path('app_main_task_delete', {id: main_task.id}) }}">
+            <i class="fa fa-trash text-danger" style="font-size: 0.5em;"></i>
+        </a>
+    </h1>
     <h5>{{ main_task.status.board.project.name }}/{{ main_task.status.board.name }}/{{ main_task.task.title }}</h5>
+
+    {# Top info #}
 
     <a href="{{ path('app_board_view', { id : main_task.status.board.id }) }}">
         <i class="fa fa-arrow-left"></i>Back to board
@@ -30,9 +40,11 @@
     <br>
     Total time spent on this task: {{ total_time }} hours</p>
 
+    {# Subtasks #}
+
     <h3>Subtasks</h3>
     <table class="table">
-    {% for subTask in main_task.subTasks %}
+    {% for subTask in main_task.subTasks|sort((a, b) => a.position <=> b.position) %}
         <tr style="border-top: 1px solid;">
             <td style="font-size: 1.2em;">{{ subTask.task.title }}</td>
             <td>
@@ -49,7 +61,11 @@
                 </button></a>
                 <a href="{{ path('app_work_time_new', { taskId : subTask.task.id }) }}"><button class="btn">
                     <i class="fa fa-clock"></i>Register time
-                </button></a></td>
+                </button></a>
+                <a href="{{ path('app_sub_task_delete', { id : subTask.id }) }}"><button class="btn btn-danger">
+                    <i class="fa fa-trash"></i>
+                </button></a>
+            </td>
         </tr>
     {% endfor %}
     </table>
@@ -58,6 +74,43 @@
             <i class="fa fa-plus"></i>New subtask
         </button>
     </a>
+
+    {# Events #}
+
+    <h3>Events</h3>
+    <table class="table">
+    {% for event in main_task.events %}
+        <tr style="border-top: 1px solid;">
+            <td style="font-size: 1.2em;">{{ event.task.title }}</td>
+            <td>
+            {% for user in event.task.users %}
+                <span class="badge" style="font-size: 1em; background-color: #267;">{{ user.fullName }}</span>
+            {% endfor %}
+            </td>
+            <td>
+                <a href="{{ path('app_task_assign', { id : event.task.id }) }}"><button class="btn">
+                    <i class="fa fa-plus"></i>Assign Users
+                </button></a>
+                <a href="{{ path('app_event_edit', { id : event.id }) }}"><button class="btn">
+                    <i class="fa fa-pen"></i>Edit
+                </button></a>
+                <a href="{{ path('app_work_time_new', { taskId : event.task.id }) }}"><button class="btn">
+                    <i class="fa fa-clock"></i>Register time
+                </button></a>
+                <a href="{{ path('app_event_delete', { id : event.id }) }}"><button class="btn btn-danger">
+                    <i class="fa fa-trash"></i>
+                </button></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+     <a href="{{ path('app_event_new', { mainTaskId : main_task.id }) }}">
+        <button class="btn">
+            <i class="fa fa-plus"></i>New event
+        </button>
+    </a>
+
+    {# Other info #}
 
     <p>MainTask.id: {{ main_task.id }}, Task.id {{ main_task.task.id }}</p>
 

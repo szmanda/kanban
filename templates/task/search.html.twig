@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('task_search') }}
+{% endblock %}
+
+{% block body %}
+    <h1>Find Task</h1>
+    <form action="{{ path('app_task_search') }}" method="get">
+        <div class="form-group">
+            <input name="q"
+                   class="form-control search-field"
+                   placeholder="{{ 'post.search_for'|trans }}"
+                   autocomplete="off"
+                   value="{{ query }}"
+                   autofocus
+                   data-no-results-message="No results"
+            >
+        </div>
+    </form>
+{% endblock %}

@@ -19,7 +19,7 @@
     </a>
 
     <div class="row">
-        {% for status in board.statuses %}
+        {% for status in board.statuses|sort((a, b) => a.position <=> b.position) %}
             <div class="card col-md-3 position-relative">
                 <h3>
                     {{ status.name }}
@@ -34,7 +34,7 @@
                     <i class="fa fa-exclamation"></i>Prioritize
                 </a>
                 <ul class="list-group">
-                {% for mainTask in status.mainTasks %}
+                {% for mainTask in status.mainTasks|sort((a, b) => a.position <=> b.position) %}
                     <a href="{{ path('app_main_task_view', { id : mainTask.id }) }}">
                         <li class="list-group-item">
                             {{ mainTask.task.title }}

@@ -95,4 +95,13 @@ class MainTaskController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/delete/{id}', name: 'app_main_task_delete')]
+    public function delete(Request $request, EntityManagerInterface $entityManager, MainTask $mainTask): Response
+    {
+        $boardId = $mainTask->getStatus()->getBoard()->getId();
+        $entityManager->remove($mainTask);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_board_view', array("id" => $boardId));
+    }
 }
